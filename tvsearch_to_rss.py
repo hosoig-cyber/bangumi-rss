@@ -95,12 +95,12 @@ RSS_RULES = {
     "tv_movie": {
         "queries": ["🈙","映画"],          # OR条件
         "genres": {"映画"},
-        "exclude_titles": ["🈞"],
+        "exclude_titles": ["🈞","プレミアムNAVI"],
         "rss_file": "01_04tv_movie.xml",
     },
     ## 番組指定
     "tv_life": {
-        "queries": ["これ、かっこイイぜ","人と暮らしと台所","タサン志麻"],          # OR条件
+        "queries": ["これ、かっこイイぜ","人と暮らしと、台所","タサン志麻"],          # OR条件
         "genres": {"バラエティ","映画","ドラマ","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
         "exclude_titles": [],
         "rss_file": "02_01tv_life.xml",
@@ -231,6 +231,13 @@ RSS_RULES = {
         "exclude_titles": ["有吉の壁","シソンヌ長谷川"],
         "rss_file": "04_18tv_sisonnu.xml",
     },
+    "tv_sandwitch": {
+        "queries": ["サンドウィッチマン"],          # OR条件
+        "genres": {"バラエティ","映画","ドラマ","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
+        "exclude_titles": [],
+        "rss_file": "04_19tv_sandwitch.xml",
+    },
+    
 }
 
 # =========================
