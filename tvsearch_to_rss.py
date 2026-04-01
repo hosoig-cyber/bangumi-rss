@@ -369,7 +369,7 @@ for rule_name, rule in RSS_RULES.items():
         description = (
             f"{program['station']:}"
             f"{program['datetime']}"
-            f"【{genre_text}】"
+            f" 【{genre_text}】 "
             f"key：{hit_text}\n"
 #            f"{program['detail_url']}"
         )
