@@ -76,7 +76,8 @@ SKY_PERFECT_KEYWORDS = [
     "スポーツライブ＋",
     "スカチャン1",
     "日テレジータス",
-    "ファミリー劇場"
+    "ファミリー劇場",
+    "ザ・シネマ",
 ]
 
 def is_skyperfect(station: str) -> bool:
@@ -384,8 +385,8 @@ for rule_name, rule in RSS_RULES.items():
             ET.SubElement(item, "link").text = detail_url
             ET.SubElement(item, "description").text = (
                 f"{datetime_text}\n"
-                f"放送局：{station}\n"
-                f"詳細：{detail_url}"
+                f"{station}\n"
+                f"{detail_url}"
             )
             ET.SubElement(item, "pubDate").text = now_rfc2822()
             ET.SubElement(item, "guid").text = guid
