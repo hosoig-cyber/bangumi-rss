@@ -367,7 +367,7 @@ for rule_name, rule in RSS_RULES.items():
         ET.SubElement(item, "link").text = program["detail_url"]
 
         description = (
-            f"{program['station']:}"
+            f"{program['station']:_}"
             f"{program['datetime']}"
             f" 【{genre_text}】 "
             f"key：{hit_text}\n"
