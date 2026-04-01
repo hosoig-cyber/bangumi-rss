@@ -21,6 +21,7 @@ HEADERS = {
 # スカパー系除外
 SKIP_STATIONS = [
     "AT-X",
+    "AT－X"
     "ナショジオ",
     "スーパー!ドラマ",
     "キッズステーション",
@@ -74,19 +75,19 @@ SKIP_STATIONS = [
 
 RSS_RULES = {
     "new_anime": {
-        "queries": ["🈟","[新]"],          # OR条件
+        "queries": ["🈟"],          # OR条件
         "genres": {"アニメ／特撮"},
         "exclude_titles": ["総集編"],
         "rss_file": "01_01new_anime.xml",
     },
     "new_drama": {
-        "queries": ["🈟","[新]"],          # OR条件
+        "queries": ["🈟"],          # OR条件
         "genres": {"ドラマ"},
         "exclude_titles": [],
         "rss_file": "01_02new_drama.xml",
     },
     "new_variety": {
-        "queries": ["🈟","[新]"],          # OR条件
+        "queries": ["🈟"],          # OR条件
         "genres": {"バラエティ","映画","ドラマ","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
         "exclude_titles": ["再放送"],
         "rss_file": "01_03new_variety.xml",
