@@ -102,14 +102,14 @@ RSS_RULES = {
     },
     "new_variety": {
         "queries": ["🈟"],          # OR条件
-        "genres": {"バラエティ"},
+        "genres": {"バラエティ","映画","ドラマ","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
         "exclude_titles": ["再放送"],
         "rss_file": "01_03new_variety.xml",
     },
     "tv_movie": {
         "queries": ["🈙","映画"],          # OR条件
         "genres": {"映画"},
-        "exclude_titles": [],
+        "exclude_titles": ["🈞"],
         "rss_file": "01_04tv_movie.xml",
     },
     ## 番組指定
