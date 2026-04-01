@@ -1,37 +1,25 @@
 import requests
 from bs4 import BeautifulSoup
 import xml.etree.ElementTree as ET
-from datetime import datetime, timedelta
-import os
+from datetime import datetime
+from collections import defaultdict
 import json
-import re
-import subprocess
+import time
+import os
 
-# ============================================================
-# 基本設定
-# ============================================================
+# =========================
+# 共通設定
+# =========================
 
 API_URL = "https://bangumi.org/fetch_search_content/"
-OUTPUT_DIR = "."
-RETENTION_DAYS = 30
-
-os.makedirs(OUTPUT_DIR, exist_ok=True)
-
 HEADERS = {
-    "User-Agent": (
-        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-        "AppleWebKit/537.36 (KHTML, like Gecko) "
-        "Chrome/123.0.0.0 Safari/537.36"
-    ),
-    "Accept-Language": "ja,en-US;q=0.9",
-    "Referer": "https://bangumi.org/search",
+    "User-Agent": "Mozilla/5.0",
+    "Accept-Language": "ja",
+    "Referer": "https://bangumi.org/"
 }
 
-# ============================================================
-# スカパー除外（地上波＋BS）
-# ============================================================
-
-SKY_PERFECT_KEYWORDS = [
+# スカパー系除外
+SKIP_STATIONS = [
     "AT-X",
     "ナショジオ",
     "スーパー!ドラマ",
@@ -80,12 +68,9 @@ SKY_PERFECT_KEYWORDS = [
     "ザ・シネマ",
 ]
 
-def is_skyperfect(station: str) -> bool:
-    return any(k in station for k in SKY_PERFECT_KEYWORDS)
-
-# ============================================================
-# RSSルール（ここを編集）
-# ============================================================
+# =========================
+# RSS ルール（★ここを編集）
+# =========================
 
 RSS_RULES = {
     "new_anime": {
@@ -245,15 +230,17 @@ RSS_RULES = {
         "exclude_titles": ["有吉の壁"],
         "rss_file": "04_18tv_sisonnu.xml",
     },
-    
 }
 
-# ============================================================
-# 共通関数
-# ============================================================
+# =========================
+# ユーティリティ
+# =========================
 
 def now_rfc2822():
     return datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0900")
+
+def is_skip_station(station):
+    return any(k in station for k in SKIP_STATIONS)
 
 def get_genres(li):
     raw = li.get("type_genre")
@@ -261,84 +248,59 @@ def get_genres(li):
         return set()
     try:
         return set(json.loads(raw))
-    except:
+    except Exception:
         return set()
 
-def parse_jp_datetime(text):
-    """
-    例: '3月31日 火曜 22:00'
-    """
-    m = re.search(r'(\d+)月(\d+)日.*?(\d+):(\d+)', text)
-    if not m:
-        return None
-    month, day, hour, minute = map(int, m.groups())
-    year = datetime.now().year
-    return datetime(year, month, day, hour, minute)
-
-def load_or_create_rss(path, title):
-    if os.path.exists(path):
-        tree = ET.parse(path)
-        channel = tree.getroot().find("channel")
+def load_or_create_rss(rss_file, title):
+    if os.path.exists(rss_file):
+        tree = ET.parse(rss_file)
+        rss = tree.getroot()
+        channel = rss.find("channel")
         existing = {
             item.findtext("guid")
             for item in channel.findall("item")
             if item.find("guid") is not None
         }
         return tree, channel, existing
+    else:
+        rss = ET.Element("rss", version="2.0")
+        channel = ET.SubElement(rss, "channel")
+        ET.SubElement(channel, "title").text = title
+        ET.SubElement(channel, "link").text = "https://bangumi.org/"
+        ET.SubElement(channel, "description").text = title
+        ET.SubElement(channel, "lastBuildDate").text = now_rfc2822()
+        tree = ET.ElementTree(rss)
+        return tree, channel, set()
 
-    rss = ET.Element("rss", version="2.0")
-    channel = ET.SubElement(rss, "channel")
-    ET.SubElement(channel, "title").text = title
-    ET.SubElement(channel, "link").text = "https://bangumi.org/"
-    ET.SubElement(channel, "description").text = title
-    ET.SubElement(channel, "lastBuildDate").text = now_rfc2822()
-    return ET.ElementTree(rss), channel, set()
-
-def prune_old_items(channel):
-    cutoff = datetime.now() - timedelta(days=RETENTION_DAYS)
-    removed = 0
-
-    for item in list(channel.findall("item")):
-        desc = item.findtext("description") or ""
-        lines = desc.splitlines()
-        if len(lines) < 2:
-            continue
-
-        dt = parse_jp_datetime(lines[0])
-        if dt and dt < cutoff:
-            channel.remove(item)
-            removed += 1
-
-    return removed
-
-# ============================================================
-# メイン処理
-# ============================================================
+# =========================
+# メイン処理（ルールごと）
+# =========================
 
 for rule_name, rule in RSS_RULES.items():
-    print(f"\n==== RSS更新: {rule_name} ====")
+    print(f"\n=== 処理開始: {rule_name} ===")
 
-    rss_path = os.path.join(OUTPUT_DIR, rule["rss_file"])
     tree, channel, existing_guids = load_or_create_rss(
-        rss_path,
+        rule["rss_file"],
         f"bangumi.org RSS: {rule_name}"
     )
 
-    removed = prune_old_items(channel)
-    print(f" - 30日超過 削除: {removed}")
+    hit_map = defaultdict(set)   # guid -> hit queries
+    program_map = {}             # guid -> program info
 
-    added = 0
-
+    # --- OR検索 ---
     for query in rule["queries"]:
-        print(f" - 検索語: {query}")
+        print(f"検索語: {query}")
 
-        res = requests.get(
-            API_URL,
-            params={"q": query, "type": "tv"},
-            headers=HEADERS,
-            timeout=30,
-        )
-        if res.status_code != 200:
+        try:
+            res = requests.get(
+                API_URL,
+                params={"q": query, "type": "tv"},
+                headers=HEADERS,
+                timeout=30
+            )
+            res.raise_for_status()
+        except Exception as e:
+            print(f"通信失敗（スキップ）: {e}")
             continue
 
         soup = BeautifulSoup(res.text, "lxml")
@@ -360,54 +322,89 @@ for rule_name, rule in RSS_RULES.items():
             else:
                 datetime_text, station = meta, ""
 
-            if is_skyperfect(station):
+            if is_skip_station(station):
+                continue
+
+            if any(x in title for x in rule["exclude_titles"]):
                 continue
 
             genres = get_genres(li)
             if rule["genres"] and not (genres & rule["genres"]):
                 continue
 
-            if any(x in title for x in rule["exclude_titles"]):
-                continue
-
             link_tag = li.select_one("a[href^='/tv_events/']")
             if not link_tag:
                 continue
-
             detail_url = "https://bangumi.org" + link_tag["href"]
 
             guid = f"{title}|{datetime_text}|{station}"
-            if guid in existing_guids:
-                continue
 
-            item = ET.SubElement(channel, "item")
-            ET.SubElement(item, "title").text = title
-            ET.SubElement(item, "link").text = detail_url
-            ET.SubElement(item, "description").text = (
-                f"{datetime_text}\n"
-                f"{station}\n"
-                f"{detail_url}"
-            )
-            ET.SubElement(item, "pubDate").text = now_rfc2822()
-            ET.SubElement(item, "guid").text = guid
+            hit_map[guid].add(query)
 
-            existing_guids.add(guid)
-            added += 1
+            if guid not in program_map:
+                program_map[guid] = {
+                    "title": title,
+                    "datetime": datetime_text,
+                    "station": station,
+                    "genres": genres,
+                    "detail_url": detail_url,
+                }
 
-    tree.write(rss_path, encoding="utf-8", xml_declaration=True)
-    print(f" - 新規追加: {added}")
-    print(f" - 出力: {rss_path}")
+        time.sleep(2)
 
-# ============================================================
-# GitHub 自動 push
-# ============================================================
+    # --- RSS 出力 ---
+    added = 0
 
-try:
-    subprocess.run(["git", "add", "."], check=True)
-    subprocess.run(["git", "commit", "-m", "update rss"], check=False)
-    subprocess.run(["git", "push"], check=True)
-    print("\n✅ GitHub に push しました")
-except Exception as e:
-    print("\n⚠ Git push 失敗:", e)
+    for guid, program in program_map.items():
+        if guid in existing_guids:
+            continue
 
-print("\n=== 完了 ===")
+        hit_text = " / ".join(sorted(hit_map[guid]))
+        genre_text = " / ".join(sorted(program["genres"])) if program["genres"] else "不明"
+
+        item = ET.SubElement(channel, "item")
+        ET.SubElement(item, "title").text = program["title"]
+        ET.SubElement(item, "link").text = program["detail_url"]
+
+        description = (
+            f"{program['station']:}"
+            f"{program['datetime']}"
+            f"【{genre_text}】"
+            f"key：{hit_text}\n"
+#            f"{program['detail_url']}"
+        )
+
+        ET.SubElement(item, "description").text = description
+        ET.SubElement(item, "pubDate").text = now_rfc2822()
+        ET.SubElement(item, "guid").text = guid
+
+        existing_guids.add(guid)
+        added += 1
+
+    tree.write(rule["rss_file"], encoding="utf-8", xml_declaration=True)
+    print(f"{rule['rss_file']} 追加件数: {added}")
+
+print("\n=== 全処理完了 ===")
+
+# =========================
+# GitHub へ自動 push（任意）
+# =========================
+
+import subprocess
+
+def git_push():
+    try:
+        subprocess.run(["git", "add", "."], check=True)
+        # 変更がない場合は commit が失敗するので check=False
+        subprocess.run(
+            ["git", "commit", "-m", "update rss"],
+            check=False
+        )
+        subprocess.run(["git", "push"], check=True)
+        print("✅ GitHub に push しました")
+    except Exception as e:
+        print("⚠ GitHub への push に失敗（RSS生成は成功）")
+        print(e)
+
+# 実行
+git_push()
