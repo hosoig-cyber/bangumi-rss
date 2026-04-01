@@ -17,7 +17,7 @@ HEADERS = {
 BASE_URL = "https://www.dimora.jp/freeword-search/"
 AREA_ID = "027"
 
-KEYWORDS = ["[新]"]
+KEYWORDS = ["🈟", "[新]", "新"]
 
 CHANNEL_TYPES = {
     "terrestrial": "2",  # 地デジ
