@@ -76,13 +76,13 @@ SKIP_STATIONS = [
 
 RSS_RULES = {
     "new_anime": {
-        "queries": ["🈟"],          # OR条件
+        "queries": ["🈟","第1話"],          # OR条件
         "genres": {"アニメ／特撮"},
         "exclude_titles": ["総集編"],
         "rss_file": "01_01new_anime.xml",
     },
     "new_drama": {
-        "queries": ["🈟"],          # OR条件
+        "queries": ["🈟","第1話"],          # OR条件
         "genres": {"ドラマ"},
         "exclude_titles": [],
         "rss_file": "01_02new_drama.xml",
