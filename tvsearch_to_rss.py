@@ -74,19 +74,19 @@ SKIP_STATIONS = [
 
 RSS_RULES = {
     "new_anime": {
-        "queries": ["🈟"],          # OR条件
+        "queries": ["🈟","[新]"],          # OR条件
         "genres": {"アニメ／特撮"},
         "exclude_titles": ["総集編"],
         "rss_file": "01_01new_anime.xml",
     },
     "new_drama": {
-        "queries": ["🈟"],          # OR条件
+        "queries": ["🈟","[新]"],          # OR条件
         "genres": {"ドラマ"},
         "exclude_titles": [],
         "rss_file": "01_02new_drama.xml",
     },
     "new_variety": {
-        "queries": ["🈟"],          # OR条件
+        "queries": ["🈟","[新]"],          # OR条件
         "genres": {"バラエティ","映画","ドラマ","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
         "exclude_titles": ["再放送"],
         "rss_file": "01_03new_variety.xml",
@@ -195,7 +195,7 @@ RSS_RULES = {
         "rss_file": "04_12tv_hinata.xml",
     },
     "tv_hinata_og": {
-        "queries": ["佐々木久美","加藤史帆","斉藤京子","佐々木美鈴","影山優佳",],          # OR条件
+        "queries": ["佐々木久美","加藤史帆","斉藤京子","佐々木美鈴","影山優佳","丹生明里","佐々木美玲","松田好花","渡邉美穂","濱岸ひより"],          # OR条件
         "genres": {"バラエティ","映画","ドラマ","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
         "exclude_titles": [],
         "rss_file": "04_13tv_hinataog.xml",
@@ -367,7 +367,7 @@ for rule_name, rule in RSS_RULES.items():
         ET.SubElement(item, "link").text = program["detail_url"]
 
         description = (
-            f"{program['station']:_}"
+            f"{program['station']} : "
             f"{program['datetime']}"
             f" 【{genre_text}】 "
             f"key：{hit_text}\n"
