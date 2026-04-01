@@ -290,7 +290,7 @@ def load_or_create_rss(rss_file, title):
 # =========================
 
 for rule_name, rule in RSS_RULES.items():
-    print(f"\n=== 処理開始: {rule_name} ===")
+#    print(f"\n=== 処理開始: {rule_name} ===")
 
     tree, channel, existing_guids = load_or_create_rss(
         rule["rss_file"],
@@ -302,7 +302,7 @@ for rule_name, rule in RSS_RULES.items():
 
     # --- OR検索 ---
     for query in rule["queries"]:
-        print(f"検索語: {query}")
+#        print(f"検索語: {query}")
 
         try:
             res = requests.get(
@@ -395,7 +395,7 @@ for rule_name, rule in RSS_RULES.items():
         added += 1
 
     tree.write(rule["rss_file"], encoding="utf-8", xml_declaration=True)
-    print(f"{rule['rss_file']} 追加件数: {added}")
+#    print(f"{rule['rss_file']} 追加件数: {added}")
 
 print("\n=== 全処理完了 ===")
 
