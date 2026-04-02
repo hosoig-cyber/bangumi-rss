@@ -30,6 +30,7 @@ CHANNEL_TYPES = {
 GENRES = {
     "anime": {
         "genre": "7",
+        "label": "アニメ",
         "rss": "01_01new_anime.xml",
         "exclude_titles": [
             "総集編", "傑作選", "特別編", "劇場版", "OVA", "編集版",
@@ -37,6 +38,7 @@ GENRES = {
     },
     "drama": {
         "genre": "3",
+        "label": "ドラマ",
         "rss": "01_02new_drama.xml",
         "exclude_titles": [
             "中国ドラマ", "韓", "華流",
@@ -44,11 +46,45 @@ GENRES = {
     },
     "variety": {
         "genre": "5",
+        "label": "バラエティ",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
             "再放送",
         ],
     },
+    "infom": {
+        "genre": "2",
+        "label": "情報／ワイドショー",
+        "rss": "01_03new_variety.xml",
+        "exclude_titles": [
+            "再放送",
+        ],
+    },
+    "music": {
+        "genre": "4",
+        "label": "音楽",
+        "rss": "01_03new_variety.xml",
+        "exclude_titles": [
+            "再放送",
+        ],
+    },
+    "docu": {
+        "genre": "8",
+        "label": "ドキュメンタリー／教養",
+        "rss": "01_03new_variety.xml",
+        "exclude_titles": [
+            "再放送",
+        ],
+    },    
+    "sports": {
+        "genre": "1",
+        "label": "スポーツ",
+        "rss": "01_03new_variety.xml",
+        "exclude_titles": [
+            "再放送",
+        ],
+    },    
+    
 }
 
 # ============================================================
@@ -153,10 +189,10 @@ for gname, gconf in GENRES.items():
         ET.SubElement(item, "title").text = p["title"]
         ET.SubElement(item, "link").text = p["link"]
         ET.SubElement(item, "description").text = (
-            f"放送日時：{p['datetime']}\n"
-            f"放送局：{p['station']}\n"
-            f"情報源：DiMORA\n"
-            f"詳細：{p['link']}"
+            f"{p['station']} : "
+            f"{p['datetime']}"
+            f" 【{gconf['label']}】 \n"
+#            f"詳細：{p['link']}"
         )
         ET.SubElement(item, "pubDate").text = now_rfc2822()
         ET.SubElement(item, "guid").text = p["guid"]

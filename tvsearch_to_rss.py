@@ -79,24 +79,25 @@ SKIP_STATIONS = [
 # =========================
 
 RSS_RULES = {
-    "new_anime": {
-        "queries": ["🈟","第1話"],          # OR条件
-        "genres": {"アニメ／特撮"},
-        "exclude_titles": ["総集編"],
-        "rss_file": "01_01new_anime.xml",
-    },
-    "new_drama": {
-        "queries": ["🈟","第1話"],          # OR条件
-        "genres": {"ドラマ"},
-        "exclude_titles": ["中国","韓"],
-        "rss_file": "01_02new_drama.xml",
-    },
-    "new_variety": {
-        "queries": ["🈟"],          # OR条件
-        "genres": {"バラエティ","映画","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
-        "exclude_titles": [],
-        "rss_file": "01_03new_variety.xml",
-    },
+
+#    "new_anime": {
+#        "queries": ["🈟","第1話"],          # OR条件
+#        "genres": {"アニメ／特撮"},
+#        "exclude_titles": ["総集編"],
+#        "rss_file": "01_01new_anime.xml",
+#    },
+#    "new_drama": {
+#        "queries": ["🈟","第1話"],          # OR条件
+#        "genres": {"ドラマ"},
+#        "exclude_titles": ["中国","韓"],
+#        "rss_file": "01_02new_drama.xml",
+#    },
+#    "new_variety": {
+#        "queries": ["🈟"],          # OR条件
+#        "genres": {"バラエティ","映画","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
+#        "exclude_titles": [],
+#        "rss_file": "01_03new_variety.xml",
+#A    },
     "tv_movie": {
         "queries": ["🈙","映画"],          # OR条件
         "genres": {"映画"},
