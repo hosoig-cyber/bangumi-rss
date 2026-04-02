@@ -49,7 +49,7 @@ GENRES = {
         "label": "バラエティ",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
-            "再放送",
+            "中国ドラマ", "華流",
         ],
     },
     "infom": {
@@ -57,7 +57,7 @@ GENRES = {
         "label": "情報／ワイドショー",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
-            "再放送",
+            "中国ドラマ", "華流",
         ],
     },
     "music": {
@@ -65,7 +65,7 @@ GENRES = {
         "label": "音楽",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
-            "再放送",
+            "中国ドラマ", "華流","[再]"
         ],
     },
     "docu": {
@@ -73,7 +73,7 @@ GENRES = {
         "label": "ドキュメンタリー／教養",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
-            "再放送",
+            "中国ドラマ", "華流",
         ],
     },    
     "sports": {
@@ -81,7 +81,7 @@ GENRES = {
         "label": "スポーツ",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
-            "再放送",
+            "中国ドラマ", "華流",
         ],
     },    
     
