@@ -102,7 +102,7 @@ RSS_RULES = {
 #        "rss_file": "01_03new_variety.xml",
 #A    },
     "tv_movie": {
-        "queries": ["🈙","映画"],          # OR条件
+        "queries": ["🈙","映画","レターボックスサイズ"],          # OR条件
         "genres": {"映画"},
         "exclude_titles": ["🈞","BS10プレミアム"],
         "rss_file": "01_04tv_movie.xml",
