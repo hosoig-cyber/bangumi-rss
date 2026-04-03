@@ -41,7 +41,7 @@ GENRES = {
         "label": "ドラマ",
         "rss": "01_02new_drama.xml",
         "exclude_titles": [
-            "中国ドラマ", "韓", "華流",
+            "中国ドラマ", "韓", "華流","[無]",
         ],
     },
     "variety": {
