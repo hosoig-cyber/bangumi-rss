@@ -79,7 +79,7 @@ GENRES = {
         "label": "ドキュメンタリー／教養",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
-            "中国ドラマ", "華流",
+            "中国ドラマ", "華流","韓国ドラマ","[無]",
         ],
     },    
     "sports": {
@@ -87,7 +87,7 @@ GENRES = {
         "label": "スポーツ",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
-            "中国ドラマ", "華流",
+            "中国ドラマ", "華流","韓国ドラマ","[無]",
         ],
     },    
     
