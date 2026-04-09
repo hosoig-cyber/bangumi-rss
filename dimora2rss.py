@@ -134,7 +134,7 @@ def fetch_dimora(keyword, ch_type, genre):
     return BeautifulSoup(res.text, "lxml")
 
 
-def is_excluded_title(title: str, exclude_list: list[str]) -> bool:
+def is_excluded_title(title: str, exclude_list) -> bool:
     return any(word in title for word in exclude_list)
 
 
