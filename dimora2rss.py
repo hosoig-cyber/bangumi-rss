@@ -17,36 +17,42 @@ HEADERS = {
     "Accept-Language": "ja",
 }
 
-# 検索語（OR）
-KEYWORDS = ["[新]"]
+# 新番組表記（OR 検索）
+KEYWORDS = ["🈟", "[新]", "新"]
 
-# 地デジ / BS（10件制限対策）
+# 地デジ / BS（10件制限回避）
 CHANNEL_TYPES = {
     "terrestrial": "2",
     "bs": "4",
 }
 
+# 有料BSチャンネル除外リスト
+EXCLUDE_BS_STATIONS = [
+    "BSアニマックス",
+    "WOWOWプライム",
+]
+
 # ジャンル別設定
 GENRES = {
     "anime": {
-        "genre": "7",
         "label": "アニメ",
+        "genre": "7",
         "rss": "01_01new_anime.xml",
         "exclude_titles": [
             "総集編", "傑作選", "特別編", "劇場版", "OVA", "編集版","[無]","中国","韓国",
         ],
     },
     "drama": {
-        "genre": "3",
         "label": "ドラマ",
+        "genre": "3",
         "rss": "01_02new_drama.xml",
         "exclude_titles": [
             "中国ドラマ", "韓", "華流","[無]","韓国ドラマ","中国","韓国",
         ],
     },
     "variety": {
-        "genre": "5",
         "label": "バラエティ",
+        "genre": "5",
         "rss": "01_03new_variety.xml",
         "exclude_titles": [
             "中国ドラマ", "華流","韓国ドラマ","[無]",
@@ -95,7 +101,7 @@ def now_rfc2822():
     return datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0900")
 
 
-def load_or_create_rss(path, title):
+def load_or_create_rss(path: str, title: str):
     if Path(path).exists():
         tree = ET.parse(path)
         channel = tree.getroot().find("channel")
@@ -119,18 +125,21 @@ def fetch_dimora(keyword, ch_type, genre):
     url = BASE_URL + requests.utils.quote(keyword)
     params = {
         "chType": ch_type,
-        "searchType": "1",   # 静的HTML版
+        "searchType": "1",   # 静的HTML
         "genre": genre,
         "areaId": AREA_ID,
     }
-    r = requests.get(url, params=params, headers=HEADERS, timeout=30)
-    r.raise_for_status()
-    return BeautifulSoup(r.text, "lxml")
+    res = requests.get(url, params=params, headers=HEADERS, timeout=30)
+    res.raise_for_status()
+    return BeautifulSoup(res.text, "lxml")
 
 
-def is_excluded(title, exclude_list):
+def is_excluded_title(title: str, exclude_list: list[str]) -> bool:
     return any(word in title for word in exclude_list)
 
+
+def is_excluded_station(station: str) -> bool:
+    return any(name in station for name in EXCLUDE_BS_STATIONS)
 
 # ============================================================
 # メイン処理
@@ -157,12 +166,17 @@ for gname, gconf in GENRES.items():
                 try:
                     title = blk.select_one(".pgmLinkTtl").get_text(strip=True)
 
-                    # 除外語チェック（生タイトル）
-                    if is_excluded(title, gconf["exclude_titles"]):
+                    # タイトル除外
+                    if is_excluded_title(title, gconf["exclude_titles"]):
                         continue
 
                     datetime_txt = blk.select_one(".pgmTimeTxt").get_text(strip=True)
                     station = blk.select_one(".pgmBcsTxt").get_text(strip=True)
+
+                    # 有料BSチャンネル除外
+                    if ch_type == "4" and is_excluded_station(station):
+                        continue
+
                     link = "https://www.dimora.jp" + blk.select_one(".pgmLinkTtl")["href"]
 
                     guid = f"{title}|{datetime_txt}|{station}"
@@ -177,7 +191,7 @@ for gname, gconf in GENRES.items():
                 except Exception:
                     continue
 
-    # GUIDで重複排除（同一スクリプト内）
+    # 同一実行内の重複除去
     uniq = {p["guid"]: p for p in collected}.values()
 
     added = 0
@@ -218,6 +232,6 @@ if total_added > 0:
         check=False
     )
     subprocess.run(["git", "push"], check=True)
-    print("✅ GitHubにpushしました")
+    print("✅ GitHub に push しました")
 else:
     print("✅ 更新なし（push不要）")
