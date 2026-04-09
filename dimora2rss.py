@@ -18,7 +18,7 @@ HEADERS = {
 }
 
 # 新番組表記（OR 検索）
-KEYWORDS = ["🈟", "[新]", "新"]
+KEYWORDS = ["[新]"]
 
 # 地デジ / BS（10件制限回避）
 CHANNEL_TYPES = {
