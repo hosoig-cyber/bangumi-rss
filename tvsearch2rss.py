@@ -79,7 +79,8 @@ SKIP_STATIONS = [
     "Mnet",
     "ＭＯＮＤＯ　ＴＶ",
     "LaLaTV",
-    "GAORA SPORTS"
+    "GAORA SPORTS",
+    "日テレプラス"
 ]
 
 # =========================
@@ -224,7 +225,7 @@ RSS_RULES = {
       "tv_kato": {
         "queries": ["加藤浩次"],          # OR条件
         "genres": {"バラエティ","映画","ドラマ","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
-        "exclude_titles": ["がっちりマンデー"],
+        "exclude_titles": ["がっちりマンデー","ビジネスサバイブ"],
         "rss_file": "04_15tv_kato.xml",
     },
       "tv_timo": {
