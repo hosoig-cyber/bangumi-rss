@@ -30,6 +30,7 @@ CHANNEL_TYPES = {
 EXCLUDE_BS_STATIONS = [
     "BSアニマックス",
     "WOWOWプライム",
+    "ディズニーch",
 ]
 
 # ジャンル別設定
