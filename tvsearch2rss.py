@@ -253,7 +253,7 @@ RSS_RULES = {
         "rss_file": "04_19tv_sandwitch.xml",
     },
     "tv_sakuraog": {
-        "queries": ["関有美子","小林由依","井上梨名","守屋茜"],          # OR条件
+        "queries": ["関有美子","小林由依","井上梨名","守屋茜","尾関梨香","渡邉理佐"],          # OR条件
         "genres": {"バラエティ","映画","ドラマ","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
         "exclude_titles": [],
         "rss_file": "04_20tv_sakuraog.xml",
