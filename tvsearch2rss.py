@@ -80,7 +80,7 @@ SKIP_STATIONS = [
     "ＭＯＮＤＯ　ＴＶ",
     "LaLaTV",
     "GAORA SPORTS",
-    "日テレプラス".
+    "日テレプラス",
     "MTV"
 ]
 
