@@ -209,7 +209,7 @@ RSS_RULES = {
       "tv_hinata": {
         "queries": ["日向坂46"],          # OR条件
         "genres": {"バラエティ","映画","ドラマ","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
-        "exclude_titles": ["日向坂で会いましょう"],
+        "exclude_titles": [],
         "rss_file": "04_12tv_hinata.xml",
     },
     "tv_hinata_og": {
