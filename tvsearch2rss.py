@@ -157,7 +157,7 @@ RSS_RULES = {
     "tv_westland": {
         "queries": ["ウエストランド"],          # OR条件
         "genres": {"バラエティ","映画","ドラマ","情報／ワイドショー","ニュース／報道","ドキュメンタリー／教養","劇場／公演","趣味／教育","音楽","スポーツ"},
-        "exclude_titles": ["再放送","KAWAIIってして","耳の穴かっぽじって"],
+        "exclude_titles": ["再放送","KAWAIIってして","耳の穴かっぽじって","冠モナキ"],
         "rss_file": "04_02tv_westland.xml",
     },
     "tv_kudokan": {
